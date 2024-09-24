@@ -1,7 +1,8 @@
 PARENT = parent
 CHILD = child
+OUTPUT = 1.txt
 
-all: $(PARENT) $(CHILD) output.txt
+all: $(PARENT) $(CHILD) $(OUTPUT)
 
 $(PARENT): parent.c
 	gcc -Wall -Wextra -pedantic -Werror -g parent.c -o $(PARENT)
@@ -9,11 +10,11 @@ $(PARENT): parent.c
 $(CHILD): child.c
 	gcc -Wall -Wextra -pedantic -Werror -g child.c -o $(CHILD)
 
-output.txt:
-	touch output.txt
+$(OUTPUT):
+	touch $(OUTPUT)
 
 run: all
 	./$(PARENT)
 
 clean:
-	rm -f $(PARENT) $(CHILD) output.*
+	rm -f $(PARENT) $(CHILD) $(OUTPUT)

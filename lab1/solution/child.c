@@ -12,7 +12,6 @@ int main() {
   size_t error_count = 0;
   memset(str, 0, BUFFER_SIZE);
 
-  // Reading output name
   if (read(STDIN_FILENO, &str_sz, sizeof(size_t)) < 0 ||
       read(STDIN_FILENO, str, sizeof(char) * str_sz) < 0) {
     perror("Reading failed");
@@ -26,7 +25,6 @@ int main() {
     exit(-1);
   }
 
-  // Reading and processing text lines
   while (read(STDIN_FILENO, &str_sz, sizeof(size_t)) > 0) {
     memset(str, 0, BUFFER_SIZE);
 
@@ -39,13 +37,12 @@ int main() {
       fputs(str, output);
       fputs("\n", output);
     } else {
-      ++error_count;
+      fprintf(stderr, "Error: line '%s' is invalid\n", str);
     }
   }
 
   fclose(output);
 
-  // Send errors count to parent
   if (write(STDOUT_FILENO, &error_count, sizeof(size_t)) < 0) {
     perror("Writing error count to parent failed");
     exit(-1);
