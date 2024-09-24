@@ -8,8 +8,6 @@
 int main() {
   char str[BUFFER_SIZE];
   size_t str_sz;
-  FILE *output;
-  size_t error_count = 0;
   memset(str, 0, BUFFER_SIZE);
 
   if (read(STDIN_FILENO, &str_sz, sizeof(size_t)) < 0 ||
@@ -18,7 +16,9 @@ int main() {
     exit(-1);
   }
 
-  output = fopen(str, "w");
+  FILE *output = fopen(str, "w");
+  int fd = fileno(output);
+  dup2(fd, STDOUT_FILENO);
 
   if (output == NULL) {
     perror("The file could not be opened");
@@ -34,19 +34,12 @@ int main() {
     }
 
     if (str[str_sz - 1] == '.' || str[str_sz - 1] == ';') {
-      fputs(str, output);
-      fputs("\n", output);
+      printf("%s\n", str);
     } else {
       fprintf(stderr, "Error: line '%s' is invalid\n", str);
     }
   }
 
   fclose(output);
-
-  if (write(STDOUT_FILENO, &error_count, sizeof(size_t)) < 0) {
-    perror("Writing error count to parent failed");
-    exit(-1);
-  }
-
   return 0;
 }
