@@ -55,6 +55,7 @@ template <typename T> void mutex_init(T *shared_memory) {
 }
 
 void start_game(RoomSharedMemory *room_shared_memory) {
+  std::this_thread::sleep_for(std::chrono::seconds(1));
   send_game_response(room_shared_memory, "msg",
                      fmt::format("The game begins!\n"));
 
